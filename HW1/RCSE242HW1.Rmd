@@ -1,0 +1,168 @@
+---
+title: "CSE 242 Homework 1"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+# Problem 1: Conditional probability
+
+If we remove 2 kings from a deck of 52 cards, there are 50 cards left over. Furthermore, the hearts and diamonds will have only 2 face cards each, giving them a total of 12 cards per suit.
+
+## a) 
+
+$P(F) = \frac{2}{50} = \frac{1}{25}$
+
+## b)
+
+$P(B) = \frac{26}{50}=\frac{13}{25}$
+
+## c)
+
+$P(BF) =  \frac{2}{50}=\frac{1}{25}$
+
+## d)
+
+$P(F|B) = \frac{2}{16} = \frac{1}{13}$
+
+## e)
+
+$P(B|F) = 1$
+
+## f)
+
+$P(BF) = P(F|B)P(B) = P(B|F)P(F)$
+$\frac{1}{25} = \frac{1}{13} \cdot \frac{13}{25} = \frac{1}{25}\cdot1$
+
+## g)
+
+$$
+\begin{aligned}
+P(H|\text{not a 2}) 
+&= \frac{P(\text{not a 2|H})P(H)}{P(\text{not a 2})} \\
+&= \frac{[1-P(\text{is a 2|H})]P(H)}{1-P(\text{is a 2})}\\
+&= \frac{\left(1-\frac{1}{12}\right)\left(\frac{12}{50}\right)}{1-\frac{4}{50}} \\
+&= \frac{1}{46}
+\end{aligned}
+$$
+
+\pagebreak
+
+# Problem 3
+
+$$
+P(H) = \lambda
+$$
+
+## a)
+
+Obtaining the first head at the $(k+1)$th toss means that the $k$ tosses before it were tails.
+
+$$
+\begin{aligned}
+P(\{T\}_{i=1}^kH) &= P(T)^kP(H) \\
+&= (1-\lambda)^k \lambda
+\end{aligned}
+$$
+
+## b)
+
+Here we are saying the number of tosses $K$ before the first heads is a random variable, so the expectation is
+
+$$
+\begin{aligned}
+E(K) &= \sum_{k \in \mathbb{Z}^+} kP(K=k) \\
+&= \sum_{k=1}^\infty k(1-\lambda)^k\lambda \\
+&= \lambda\frac{1-\lambda}{[(1-\lambda)-1]^2} & (\text{Wolfram Alpha}) \\
+&= \frac{1-\lambda}{\lambda}
+\end{aligned}
+$$
+
+## c)
+
+Now the random variable is the number of heads $Y$. If we toss the coin one time, then it has a probability mass function (pmf) of
+
+$$
+\begin{aligned}
+P(Y=y) &= \lambda^y(1-\lambda)^{1-y} & y \in \{0,1\}
+\end{aligned}
+$$
+
+If we have $N$ independent tosses, then we have to multiply the probability of success $y$ times, and multiply the probability of failure the remaining $N-y$ times. Also, the order of heads does not matter when we just want the number of heads, so the pmf is
+
+$$
+\begin{aligned}
+P(Y=y) &= {N \choose y} \lambda^y(1-\lambda)^{N-y} & y \in \{0,1,2,...\}
+\end{aligned}
+$$
+Thus, the expected value of the number of heads $Y$ is
+
+$$
+\begin{aligned}
+E(Y) &= \sum_y yP(Y=y) \\
+&= \sum_{y=0}^\infty  y{N \choose y} \lambda^y(1-\lambda)^{N-y} \\
+&= \sum_{y=0}^\infty y\frac{N!}{y!(N-y)!}\lambda^y(1-\lambda)^{N-y} \\
+&= \sum_{y=0}^\infty \frac{N(N-1)!}{(y-1)!(N-y)!}\lambda^y(1-\lambda)^{N-y} \\
+&= N\sum_{y=0}^\infty {N-1 \choose y-1}\lambda^y(1-\lambda)^{N-y} & (N-1) - (y-1) = N-y \\
+&= N\lambda\sum_{y=0}^\infty {N-1 \choose y-1}\lambda^{y-1}(1-\lambda)^{(N-1)-(y-1)} \\
+&= N\lambda
+\end{aligned}
+$$
+The last step comes from the fact that pmfs sum to 1 and the expression inside the sum was the pmf of an experiment with $N-1$ independent tosses with $y-1$ heads.
+
+# Problem 4
+
+## a)
+
+If my assigned probability density of $x$ is $f(x) = (n+1)x^n, \quad x \in (0,1]$, then my expected value is
+
+$$
+\begin{aligned}
+E(X) &= \int_{-\infty}^\infty xf(x) \, dx \\
+&= \int_0^1 x(n+1)x^n \, dx \\
+&= \frac{n+1}{n+2}x^{n+2} \bigg\rvert_0^1 \\
+&= \frac{n+1}{n+2}
+\end{aligned}
+$$
+
+## b)
+
+Denote the random variable $Y$ for whether I heard thunder or not. $y=0$ means that I did not hear thunder and $y=1$ means that I did. Then the pmf for the probability of hearing thunder is
+
+$$
+\begin{aligned}
+P(Y=y|x) &= (1-x)^y x^{1-y} & y \in \{0,1\}
+\end{aligned}
+$$
+
+Then by Bayes' rule,
+
+$$
+\begin{aligned}
+f(x|Y=y) &\propto  P(Y=y|x)f(x)\\
+&\propto (1-x)^y x^{1-y}(n+1)x^n \\
+&\propto (1-x)^y x^{1-y+n}
+\end{aligned}
+$$
+So if we did not hear thunder, i.e. $y=0$, then the posterior density is proportional to
+
+$$
+\begin{aligned}
+f(x|y=1) &\propto x^{n+1}  & x \in (0,1]
+\end{aligned}
+$$
+
+The normalizing factor is a factor $c$ that when multiplied with the pdf, the pdf sums to 1 on its support set.
+
+$$
+\int_{0}^1 cx^{n+1} \,dx = c\frac{x^{n+2}}{n+2}\bigg\rvert_{0}^1 = \frac{c}{n+2} = 1 \\
+\implies c = n+2
+$$
+So the posterior density is
+
+$$
+\begin{aligned}
+f(x|y=1) &= (n+2)x^{n+1} & x \in (0,1]
+\end{aligned}
+$$
+
